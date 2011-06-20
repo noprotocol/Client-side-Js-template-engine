@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta name="robots" content="noindex, nofollow" /> 
+<title>Test</title> 
+<script type="text/javascript" src="jquery-1.6.1.min.js"></script> 
+<script type="text/javascript" src="mapper-0.1.js"></script> 
+<script type="text/javascript">
+$(document).ready(function() {
+	var data1 = {say: "hello world", type: "msg", answer:"we say hi!"};
+	var data2 = {say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
+	var data3 = {say: "hello world", replies:[1,"yes","maybe"]};
+	var data5 = {say: "hello world"};
+	
+	$('#test0').mapper('only a string');
+	$('#test1').mapper(data1);
+	$('#test2').mapper(data2);
+	$('#test3').mapper(data3);
+	$('#test4').mapper(data2);
+	$('#test5').mapper(data5);
+});
+</script>
+<style>	
+	* { font-size: 16px; font-family: 'Lucida Grande'; line-height: 24px;}
+	.code, 
+	textarea {
+		width: 800px;
+		font-size: 13px;
+		line-height: 17px;
+		padding: 5px;
+		background-color: #000;
+		color: #fff;
+		font-family: "Monaco", "courier new";
+		overflow: hidden;
+		resize: none;
+	}
+	.code { display: block; color: yellow;}
+	span.msg { font-style: italic;}
+</style>
+</head> 
+<body> 
+	
+<span class="code">$('selector').mapper(data);</span>
+
+<hr>
+	
+<b>#test0 - simple string</b><br/>
+<textarea rows="1">
+'only a string'
+</textarea>
+<textarea rows="1">
+<div id="test0"></div>	
+</textarea>
+
+<div id="test0"></div>
+
+<hr>
+
+<b>#test1 - with ":attributes"<br>(removes *:* from class, see inspector, style: span.msg {font-style: italic;})</b><br/>
+<textarea rows="1">
+{say: "hello world", type: "msg", answer:"we say hi!"}
+</textarea>
+<textarea rows="4">
+<div id="test1">
+	<span class="say type:class"></span><br/>
+	<span class="answer"></span>
+</div>	
+</textarea>	
+
+<div id="test1">
+	<span class="say type:class"></span><br/>
+	<span class="answer"></span>
+</div>
+
+<hr>
+
+<b>#test2 - associative array</b><br/>
+<textarea rows="1">
+{say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
+</textarea>
+<textarea rows="6">
+<div id="test2">
+	<span class="say"></span>
+	<ul class="replies">
+		<li class="answer"></li>
+	</ul>
+</div>
+</textarea>
+
+<div id="test2">
+	<span class="say"></span>
+	<ul class="replies">
+		<li class="answer"></li>
+	</ul>
+</div>
+
+<hr>
+
+<b>#test3 - non-associative array</b><br>
+<textarea rows="1">
+{say: "hello world", replies:[1,"yes","maybe"]};
+</textarea>
+<textarea rows="6">
+<div id="test3">
+	<span class="say"></span>
+	<ul class="replies">
+		<li></li>
+	</ul>
+</div>
+</textarea>
+
+<div id="test3">
+	<span class="say"></span>
+	<ul class="replies">
+		<li></li>
+	</ul>
+</div>
+
+<hr>
+
+<b>#test4 - deep nesting</b><br>
+<textarea rows="1">
+{say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
+</textarea>
+<textarea rows="10">
+<div id="test4">
+	<span class="say"></span>
+	<ul class="replies">
+		<li>
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+		</li>
+	</ul>
+</div>
+</textarea>
+
+<div id="test4">
+	<span class="say"></span>
+	<ul class="replies">
+		<li>
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+		</li>
+	</ul>
+</div>
+
+<hr>
+
+<b>test5 - input values <br/>(auto values instead of textnodes for input and option tags)</b><br/>
+<textarea rows="1">
+{say: "hello world"}
+</textarea>
+<textarea rows="4">
+<div id="test5">
+	<span class="say"></span>
+	<input class="say"/>
+</div>
+</textarea>
+
+<div id="test5">
+	<span class="say"></span>
+	<input class="say"/>
+</div>
+
+</body> 
+</html>

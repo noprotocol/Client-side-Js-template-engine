@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta name="robots" content="noindex, nofollow" /> 
+<title>Test</title> 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script> 
+<script type="text/javascript">
+
+(function($) {
+	$.fn.mapper = function(data) {		
+		$(this).each(function() {
+			var map = function(node, data) {
+				switch(data.constructor.name) {
+				case "String": case "Number":
+					node.appendChild(document.createTextNode(data));
+					break;
+				case "Array":
+					var firstchild = node.children[0];
+					if (firstchild === null) return node;
+					for (var i = 0, l = data.length; i < l; i++) {
+						node.appendChild(map(firstchild.cloneNode(true), data[i]));
+					}
+					node.removeChild(firstchild);
+					break;
+				case "Object":
+					var dig = true;
+					if (node.hasAttribute('class')) {
+						var classes = node.getAttribute('class').split(' '), m = classes.length, val = '';
+						while (m--) { if ((val = data[classes[m]])) { map(node, val); dig = false } }
+					}
+					if (dig) { //TODO: optimize
+						var children = node.children, l = children.length;
+						while(l--) { map(children[l], data); } 
+					}
+					break;
+				}
+				return node;
+			}
+			this.parentNode.replaceChild(map(this.cloneNode(true), data), this);
+		});
+	}	
+})(jQuery);
+
+$(document).ready(function() {
+	var data0 = 'only a string';
+	var data1 = {say: "hello world", answer:"we say hi!"};
+	var data2 = {say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
+	var data3 = {say: "hello world", replies:[1,"yes","maybe"]};
+	
+	$('#test0').mapper(data0);
+	$('#test1').mapper(data1);
+	$('#test2').mapper(data2);
+	$('#test3').mapper(data3);
+	$('#test4').mapper(data2);
+});
+</script>
+</head> 
+<body> 
+	
+<b>test0</b>
+<div id="test0"></div>
+
+<b>test1</b>
+<div id="test1">
+	<span class="say"></span><br/>
+	<span class="answer"></span>
+</div>
+
+<b>test2</b>
+<div id="test2">
+	<span class="say"></span>
+	<ul class="replies">
+		<li class="answer"></li>
+	</ul>
+</div>
+
+<b>test3</b>
+<div id="test3">
+	<span class="say"></span>
+	<ul class="replies">
+		<li></li>
+	</ul>
+</div>
+
+<b>test4</b>
+<div id="test4">
+	<span class="say"></span>
+	<ul class="replies">
+		<li>
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+		</li>
+	</ul>
+</div>
+
+</body> 
+</html>
