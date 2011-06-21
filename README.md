@@ -35,6 +35,4 @@ A [PURE](http://beebole.com/pure/) inspired templating engine.
 
 # Examples
 
-Some examples here
-
 	TODO

@@ -1,168 +1,333 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head> 
-<meta name="robots" content="noindex, nofollow" /> 
-<title>Test</title> 
+<title>Mapper</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<link rel="stylesheet" type="text/css" href="google-code-prettify/prettify.css">
 <script type="text/javascript" src="jquery-1.6.1.min.js"></script> 
-<script type="text/javascript" src="mapper-0.1.min.js"></script> 
-<script type="text/javascript">
-$(document).ready(function() {
-	var data1 = {say: "hello world", type: "msg", answer:"we say hi!"};
-	var data2 = {say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
-	var data3 = {say: "hello world", replies:[1,"yes","maybe"]};
-	var data5 = {say: "hello world"};
-	
-	$('#test0').mapper('only a string');
-	$('#test1').mapper(data1);
-	$('#test2').mapper(data2);
-	$('#test3').mapper(data3);
-	$('#test4').mapper(data2);
-	$('#test5').mapper(data5);
-});
-</script>
-<style>	
-	* { font-size: 16px; font-family: 'Lucida Grande'; line-height: 24px;}
-	.code, 
-	textarea {
-		width: 800px;
-		font-size: 13px;
-		line-height: 17px;
-		padding: 5px;
-		background-color: #000;
-		color: #fff;
-		font-family: "Monaco", "courier new";
-		overflow: hidden;
-		border: 0;
-		resize: none;
-	}
-	.code { display: block; color: yellow;}
-	span.msg { font-style: italic;}
-</style>
+<script type="text/javascript" src="mapper-0.1.js"></script> 
+<script type="text/javascript" src="google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="benchmark.js"></script>
 </head> 
 <body> 
+
+<div id="wrapper">
 	
-<span class="code">$('selector').mapper(data);</span>
+<h1>.mapper</h1>	
+	
+<pre class="prettyprint">
+$('selector').mapper(data, functionmap);
+</pre>
 
 <hr>
 	
-<b>#test0 - simple string</b><br/>
-<textarea rows="1">
-'only a string'
-</textarea>
-<textarea rows="1">
+<h2>#test0 - simple string</h2>
+<pre class="prettyprint lang-html">
 <div id="test0"></div>	
-</textarea>
+</pre>
 
+<pre class="prettyprint">
+'only a string'
+</pre>
+
+<div class="example">
 <div id="test0"></div>
+</div>
 
 <hr>
 
-<b>#test1 - with ":attributes"<br>(removes *:* from class, see inspector, style: span.msg {font-style: italic;})</b><br/>
-<textarea rows="1">
-{say: "hello world", type: "msg", answer:"we say hi!"}
-</textarea>
-<textarea rows="4">
+<h2>#test1 - with ":attributes"</h2>
+<p>removes *:* from class, see inspector<br/>style: span.msg {font-style: italic;}</p>
+
+<pre class="prettyprint lang-html">
 <div id="test1">
-	<span class="say type:class"></span><br/>
+	<span class="say: type:class"></span><br/>
 	<span class="answer"></span>
 </div>	
-</textarea>	
+</pre>	
 
+<pre class="prettyprint">
+{
+	say: "hello world", 
+	type: "msg", 
+	answer:"we say hi!"
+}
+</pre>
+
+<pre class="prettyprint">
+{
+	say: {
+		onclick: function() { alert($(this).text()); return false; }
+	}
+}
+</pre>
+
+<div class="example">
 <div id="test1">
-	<span class="say type:class"></span><br/>
+	<span class="say: type:class"></span><br/>
 	<span class="answer"></span>
 </div>
+</div>
 
 <hr>
 
-<b>#test2 - associative array</b><br/>
-<textarea rows="1">
-{say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
-</textarea>
-<textarea rows="6">
+<h2>#test2</h2>
+<p>associative array</p>
+
+<pre class="prettyprint lang-html">
 <div id="test2">
 	<span class="say"></span>
 	<ul class="replies">
 		<li class="answer"></li>
 	</ul>
 </div>
-</textarea>
+</pre>
 
+<pre class="prettyprint">
+{
+	say: "hello world", 
+	replies:[
+		{answer:'no'},
+		{answer:'yes'},
+		{answer:'maybe'}
+	]
+}
+</pre>
+
+<pre class="prettyprint">
+{
+	answer: {
+		onclick: function() { alert($(this).text()); return false; }
+	}
+}
+</pre>
+
+<div class="example">
 <div id="test2">
 	<span class="say"></span>
 	<ul class="replies">
 		<li class="answer"></li>
 	</ul>
 </div>
+</div>
 
 <hr>
 
-<b>#test3 - non-associative array</b><br>
-<textarea rows="1">
-{say: "hello world", replies:[1,"yes","maybe"]};
-</textarea>
-<textarea rows="6">
+<h2>#test3</h2>
+<p>non-associative array</p>
+
+<pre class="prettyprint lang-html">
 <div id="test3">
 	<span class="say"></span>
 	<ul class="replies">
 		<li></li>
 	</ul>
 </div>
-</textarea>
+</pre>
 
+<pre class="prettyprint">
+{
+	say: "hello world", 
+	replies: [1, "yes", "maybe"]
+}
+</pre>
+
+<div class="example">
 <div id="test3">
 	<span class="say"></span>
 	<ul class="replies">
 		<li></li>
 	</ul>
 </div>
+</div>
 
 <hr>
 
-<b>#test4 - deep nesting</b><br>
-<textarea rows="1">
-{say: "hello world", replies:[{answer:'no'},{answer:'yes'},{answer:'maybe'}]};
-</textarea>
-<textarea rows="10">
+<h2>#test4 - deep nesting</h2>
+
+<pre class="prettyprint lang-html">
 <div id="test4">
 	<span class="say"></span>
 	<ul class="replies">
-		<li>
+		<li class="test">
 			<span>
 				<a href="#" class="answer"></a>
 			</span>
 		</li>
 	</ul>
 </div>
-</textarea>
+</pre>
 
+<pre class="prettyprint">
+{
+	say: "hello world", 
+	replies:[
+		{answer:'no', test:'1'},
+		{answer:'yes', test:'2'},
+		{answer:'maybe', test:'3'}
+	]
+}
+</pre>
+
+<pre class="prettyprint">
+{
+	answer: {
+		onclick: function() { alert($(this).text()); return false; }
+	}
+}
+</pre>
+
+<div class="example">
 <div id="test4">
 	<span class="say"></span>
 	<ul class="replies">
-		<li>
+		<li class="test">
 			<span>
 				<a href="#" class="answer"></a>
 			</span>
 		</li>
 	</ul>
 </div>
+</div>
 
 <hr>
 
-<b>test5 - input values <br/>(auto values instead of textnodes for input and option tags)</b><br/>
-<textarea rows="1">
-{say: "hello world"}
-</textarea>
-<textarea rows="4">
+<h2>#test4b - deep nesting</h2>
+
+<pre class="prettyprint lang-html">
+<div id="test4b">
+	<span class="say"></span>
+	<ul class="replies">
+		<li>
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+			<div class="test"></div>
+		</li>
+	</ul>
+</div>
+</pre>
+
+<pre class="prettyprint">
+{
+	say: "hello world", 
+	replies:[
+		{answer:'no', test:'1'},
+		{answer:'yes', test:'2'},
+		{answer:'maybe', test:'3'}
+	]
+}
+</pre>
+
+<pre class="prettyprint">
+{
+	answer: {
+		onclick: function() { alert($(this).text()); return false; }
+	}
+}
+</pre>
+
+<div class="example">
+<div id="test4b">
+	<span class="say"></span>
+	<ul class="replies">
+		<li>
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+			<div class="test"></div>
+		</li>
+	</ul>
+</div>
+</div>
+
+<h2>#test4c - deep nesting</h2>
+
+<pre class="prettyprint lang-html">
+<div id="test4c">
+	<span class="say"></span>
+	<ul class="replies">
+		<li class="even">
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+			<div class="test"></div>
+		</li>
+		<li class="odd">
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+			<div class="test"></div>
+		</li>
+	</ul>
+</div>
+</pre>
+
+<pre class="prettyprint">
+{
+	say: "hello world", 
+	replies:[
+		{answer:'no', test:'1'},
+		{answer:'yes', test:'2'},
+		{answer:'maybe', test:'3'}
+	]
+}
+</pre>
+
+<pre class="prettyprint">
+{
+	answer: {
+		onclick: function() { alert($(this).text()); return false; }
+	}
+}
+</pre>
+
+<div class="example">
+<div id="test4c">
+	<span class="say"></span>
+	<ul class="replies">
+		<li class="even">
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+			<div class="test"></div>
+		</li>
+		<li class="odd">
+			<span>
+				<a href="#" class="answer"></a>
+			</span>
+			<div class="test"></div>
+		</li>
+	</ul>
+</div>
+</div>
+
+<hr>
+
+<h2>#test5 - input tags</h2>
+<p>auto values instead of textnodes for input and option tags</p>
+
+<pre class="prettyprint lang-html">
 <div id="test5">
 	<span class="say"></span>
 	<input class="say"/>
 </div>
-</textarea>
+</pre>
 
+<pre class="prettyprint">
+{
+	say: "hello world"
+}
+</pre>
+
+<div class="example">
 <div id="test5">
 	<span class="say"></span>
 	<input class="say"/>
+</div>
+</div>
+
 </div>
 
 </body> 
