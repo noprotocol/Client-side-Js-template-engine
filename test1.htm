@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<title>Mapper</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<link rel="stylesheet" type="text/css" href="google-code-prettify/prettify.css">
+<script type="text/javascript" src="jquery-1.6.1.min.js"></script> 
+<script type="text/javascript" src="mapper.js"></script> 
+<script type="text/javascript" src="google-code-prettify/prettify.js"></script>
+<style>
+	label {
+		display: block;
+		float: left;
+		width: 100px;
+	}
+	
+	div.mailings {
+		float: left;
+		width: 300px;
+	}
+	.clear {
+		clear: both;
+	}
+</style>
+</head> 
+<body> 
+
+<div id="wrapper">
+	
+<h1>.mapper</h1>
+
+<!-- test0 -->	
+
+<div class="example">
+	<select id="test0">
+		<option></option>
+	</select>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// Dataset
+	var data = ['111', '222', '333333', '444'];
+	
+	// Map!!
+	$('#test0').mapper(data);
+});
+</script>
+
+<!-- test1 -->
+
+<div class="example">
+	<div id="test1">
+		<select class="genders">
+			<option class="value@value type"></option>
+		</select>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+	// Dataset
+	var data = {genders: [{"value":"m", "type": "Man"}, {"value":"f", "type": "Vrouw"}]};
+	
+	// Map!!
+	$('#test1').mapper(data);
+});
+</script>
+
+<!-- test2 -->
+
+<div class="example">
+	<div id="test2">
+		<form>
+			<input type="hidden" name="id" class="id"/>
+			<label>Name</label><input type="text" name="name" class="name"/><br/>
+			<label>Tel</label><input type="text" name="tel" class="tel"/><br/>
+			<label>Gender</label>
+			<select class="gender">
+				<option class="value@value selected@selected type"></option>
+			</select><br/>
+			
+			<label>Mailings</label>
+			<select class="mailings" multiple>
+				<option class="value@value selected@selected type"></option>
+			</select><br/>
+			
+			<label>Mailings</label>
+			<div class="mailings">
+				<div class="radio selected@selected">
+					<input type="checkbox" name="mailings" class="value selected@checked type"/>
+					<label class="type"></label>
+				</div>
+			</div><br/>
+			<div class="clear"></div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+	
+	// Dataset
+	var data = {
+		"id" : "2345",
+		"name" : "Max Meinders",
+		"tel" : "06 12345678",
+		"gender" : "m",
+		"mailings" : ['tips', 'news']
+	};
+	
+	//Extend with
+	var extend = {
+		"gender" : [
+			{"value":"m", "type": "Man"}, 
+			{"value":"f", "type": "Vrouw"}
+		],
+		"mailings" : [
+			{"value":"tips", "type": "Tips"}, 
+			{"value":"agenda", "type": "Agenda"}, 
+			{"value":"updates", "type": "Updates"}, 
+			{"value":"news", "type": "News"}
+		]
+	};
+	
+	function extender(data, extend) {
+		function copy(target, property, base) {
+			target[property] = base; //TODO: is shallow copy -> needs deep copy!
+		}
+		
+		function selected(prop, value) {
+			switch(value.constructor.name) {
+			case 'String': case 'Number':
+				if (prop[j]['value'] == value) {
+					prop[j]['selected'] = 'true';
+				}
+				break;
+			case 'Array':
+				for (var i in value) {
+					selected(prop, value[i]);
+				}
+				break;
+			}
+		}
+		
+		for(var i in extend) {
+			if (extend.hasOwnProperty(i)) {
+				if (data.hasOwnProperty(i)) {
+					var value = data[i];
+					copy(data, i, extend[i]);
+					var prop = data[i];
+					for (var j in prop) {
+						if (prop.hasOwnProperty(j)) {
+							selected(prop, value)
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	extender(data, extend);
+	console.log(data);
+
+	// Map!!
+	$('#test2').mapper(data);
+});
+</script>
+
+
+</div>
+
+</body> 
+</html>
